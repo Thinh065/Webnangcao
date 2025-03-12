@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Danh sách sản phẩm</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h1>Danh sách sản phẩm</h1>
+    <ul>
+        <% products.forEach(product => { %>
+            <li>
+                <h2><%= product.name %></h2>
+                <p>Giá: <%= product.price %></p>
+                <a href="/products/<%= product._id %>">Xem chi tiết</a>
+                <form action="/products/add-to-cart/<%= product._id %>" method="POST">
+                    <button type="submit">Thêm vào giỏ hàng</button>
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+    <a href="/cart">Xem giỏ hàng</a>
+</body>
+</html>

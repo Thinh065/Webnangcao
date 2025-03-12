@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chi tiết sản phẩm</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h1>Chi tiết sản phẩm</h1>
+    <h2><%= product.name %></h2>
+    <p>Giá: <%= product.price %></p>
+    <p>Mô tả: <%= product.description %></p>
+    <form action="/products/add-to-cart/<%= product._id %>" method="POST">
+        <button type="submit">Thêm vào giỏ hàng</button>
+    </form>
+    <a href="/">Trở lại danh sách</a>
+</body>
+</html>

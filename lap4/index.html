@@ -1,0 +1,222 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản Lý Category - Product</title>
+  <style>
+    form { border: 1px solid #ccc; margin: 10px; padding: 10px; }
+    h2 { margin: 0; padding: 0; }
+    .result { background: #f1f1f1; padding: 5px; margin-top: 5px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Quản Lý Category - Product</h1>
+
+  <!-- Form: Thêm Category -->
+  <form id="addCategoryForm">
+    <h2>Thêm Category Mới</h2>
+    <label>Tên: <input type="text" name="name" required></label><br>
+    <label>ID Category Cha (nếu có): <input type="text" name="parent"></label><br>
+    <button type="submit">Thêm Category</button>
+    <div class="result" id="addCategoryResult"></div>
+  </form>
+
+  <!-- Form: Thêm Product -->
+  <form id="addProductForm">
+    <h2>Thêm Product Mới</h2>
+    <label>Tên: <input type="text" name="name" required></label><br>
+    <label>Mô tả: <input type="text" name="description"></label><br>
+    <label>Giá: <input type="number" name="price" required></label><br>
+    <label>ID Categories (cách nhau bằng dấu phẩy): <input type="text" name="categories"></label><br>
+    <label>Images (cách nhau bằng dấu phẩy): <input type="text" name="images"></label><br>
+    <label>Hiển thị: <input type="checkbox" name="show" checked></label><br>
+    <button type="submit">Thêm Product</button>
+    <div class="result" id="addProductResult"></div>
+  </form>
+
+  <!-- Form: Sửa Category -->
+  <form id="updateCategoryForm">
+    <h2>Sửa Category</h2>
+    <label>ID Category cần sửa: <input type="text" name="id" required></label><br>
+    <label>Tên mới: <input type="text" name="name"></label><br>
+    <label>ID Category Cha mới (nếu có): <input type="text" name="parent"></label><br>
+    <button type="submit">Sửa Category</button>
+    <div class="result" id="updateCategoryResult"></div>
+  </form>
+
+  <!-- Form: Sửa Product -->
+  <form id="updateProductForm">
+    <h2>Sửa Product</h2>
+    <label>ID Product cần sửa: <input type="text" name="id" required></label><br>
+    <label>Tên mới: <input type="text" name="name"></label><br>
+    <label>Mô tả mới: <input type="text" name="description"></label><br>
+    <label>Giá mới: <input type="number" name="price"></label><br>
+    <label>ID Categories mới (cách nhau bằng dấu phẩy): <input type="text" name="categories"></label><br>
+    <label>Images mới (cách nhau bằng dấu phẩy): <input type="text" name="images"></label><br>
+    <label>Hiển thị: <input type="checkbox" name="show"></label><br>
+    <button type="submit">Sửa Product</button>
+    <div class="result" id="updateProductResult"></div>
+  </form>
+
+  <!-- Form: Xóa Product -->
+  <form id="deleteProductForm">
+    <h2>Xóa Product</h2>
+    <label>ID Product cần xóa: <input type="text" name="id" required></label><br>
+    <button type="submit">Xóa Product</button>
+    <div class="result" id="deleteProductResult"></div>
+  </form>
+
+  <!-- Form: Xóa Category -->
+  <form id="deleteCategoryForm">
+    <h2>Xóa Category</h2>
+    <label>ID Category cần xóa: <input type="text" name="id" required></label><br>
+    <button type="submit">Xóa Category</button>
+    <div class="result" id="deleteCategoryResult"></div>
+  </form>
+
+  <!-- Form: Lấy danh sách Category -->
+  <form id="getCategoriesForm">
+    <h2>Lấy danh sách Category</h2>
+    <button type="submit">Lấy Categories</button>
+    <div class="result" id="getCategoriesResult"></div>
+  </form>
+
+  <!-- Form: Lấy danh sách Product -->
+  <form id="getProductsForm">
+    <h2>Lấy danh sách Product</h2>
+    <button type="submit">Lấy Products</button>
+    <div class="result" id="getProductsResult"></div>
+  </form>
+
+  <!-- Form: Tìm kiếm Product theo tên -->
+  <form id="searchProductForm">
+    <h2>Tìm kiếm Product theo tên</h2>
+    <label>Tên cần tìm: <input type="text" name="search" required></label><br>
+    <button type="submit">Tìm kiếm</button>
+    <div class="result" id="searchProductResult"></div>
+  </form>
+
+  <!-- Form: Tìm danh sách Product theo Category -->
+  <form id="productsByCategoryForm">
+    <h2>Lấy danh sách Product theo Category</h2>
+    <label>ID Category: <input type="text" name="category" required></label><br>
+    <button type="submit">Lấy Product theo Category</button>
+    <div class="result" id="productsByCategoryResult"></div>
+  </form>
+
+  <script>
+    const apiBase = 'http://localhost:3000';
+
+    // Hỗ trợ hàm gửi request
+    async function sendRequest(url, method = 'GET', data = null) {
+      const options = { method, headers: { 'Content-Type': 'application/json' } };
+      if (data) {
+        options.body = JSON.stringify(data);
+      }
+      const res = await fetch(url, options);
+      return res.json();
+    }
+
+    // Xử lý sự kiện cho từng form
+    document.getElementById('addCategoryForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        name: form.name.value,
+        parent: form.parent.value || null
+      };
+      const result = await sendRequest(`${apiBase}/category`, 'POST', data);
+      document.getElementById('addCategoryResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    document.getElementById('addProductForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      // Chuyển chuỗi các id thành mảng (loại bỏ khoảng trắng thừa)
+      const categories = form.categories.value.split(',').map(s => s.trim()).filter(s => s);
+      const images = form.images.value.split(',').map(s => s.trim()).filter(s => s);
+      const data = {
+        name: form.name.value,
+        description: form.description.value,
+        price: parseFloat(form.price.value),
+        categories: categories,
+        images: images,
+        show: form.show.checked
+      };
+      const result = await sendRequest(`${apiBase}/product`, 'POST', data);
+      document.getElementById('addProductResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    document.getElementById('updateCategoryForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        name: form.name.value,
+        parent: form.parent.value || null
+      };
+      const result = await sendRequest(`${apiBase}/category?id=${form.id.value}`, 'PUT', data);
+      document.getElementById('updateCategoryResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    document.getElementById('updateProductForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const categories = form.categories.value.split(',').map(s => s.trim()).filter(s => s);
+      const images = form.images.value.split(',').map(s => s.trim()).filter(s => s);
+      const data = {
+        name: form.name.value,
+        description: form.description.value,
+        price: form.price.value ? parseFloat(form.price.value) : undefined,
+        categories: categories,
+        images: images,
+        show: form.show.checked
+      };
+      // Loại bỏ các trường undefined
+      Object.keys(data).forEach(key => data[key] === undefined && delete data[key]);
+      const result = await sendRequest(`${apiBase}/product?id=${form.id.value}`, 'PUT', data);
+      document.getElementById('updateProductResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    document.getElementById('deleteProductForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const result = await sendRequest(`${apiBase}/product?id=${form.id.value}`, 'DELETE');
+      document.getElementById('deleteProductResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    document.getElementById('deleteCategoryForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const result = await sendRequest(`${apiBase}/category?id=${form.id.value}`, 'DELETE');
+      document.getElementById('deleteCategoryResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    document.getElementById('getCategoriesForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const result = await sendRequest(`${apiBase}/categories`);
+      document.getElementById('getCategoriesResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    document.getElementById('getProductsForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const result = await sendRequest(`${apiBase}/products`);
+      document.getElementById('getProductsResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    document.getElementById('searchProductForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const result = await sendRequest(`${apiBase}/products?search=${encodeURIComponent(form.search.value)}`);
+      document.getElementById('searchProductResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    document.getElementById('productsByCategoryForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const result = await sendRequest(`${apiBase}/products?category=${encodeURIComponent(form.category.value)}`);
+      document.getElementById('productsByCategoryResult').textContent = JSON.stringify(result, null, 2);
+    });
+  </script>
+</body>
+</html>

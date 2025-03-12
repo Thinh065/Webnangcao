@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý người dùng</title>
+    <script defer src="script2.js"></script>
+</head>
+<body>
+    <h1>Quản lý người dùng</h1>
+
+    <h2>Danh sách người dùng</h2>
+    <div id="userList"></div>
+
+    <h2>Tìm kiếm theo tên</h2>
+    <input type="text" id="searchName" placeholder="Nhập tên cần tìm">
+    <button id="searchButton">Tìm kiếm</button>
+    <div id="searchResult"></div>
+
+    <h2>Thêm người dùng mới</h2>
+    <form id="addUserForm">
+        <label for="newName">Tên:</label>
+        <input type="text" id="newName" required><br>
+        <label for="newAge">Tuổi:</label>
+        <input type="number" id="newAge" required><br>
+        <label for="newCity">Địa chỉ:</label>
+        <input type="text" id="newCity" required><br>
+        <button type="submit">Thêm</button>
+        <div id="addUserError" style="color: red;"></div>
+    </form>
+
+    <h2>Chức năng khác</h2>
+    <button id="oldestUserButton">Hiển thị người lớn tuổi nhất</button>
+    <button id="userByIdButton">Hiển thị người có ID là 4</button>
+    <button id="usersRangeButton">Hiển thị từ người thứ 3 đến người thứ 7</button>
+    <button id="sortUsersButton">Sắp xếp danh sách theo tuổi giảm dần</button>
+    <button id="extractNamesButton">Tách danh sách tên riêng</button>
+    <div id="functionOutput"></div>
+</body>
+</html>
